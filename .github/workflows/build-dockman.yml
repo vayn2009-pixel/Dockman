@@ -1,0 +1,29 @@
+name: Build Dockman
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app
+          xcodebuild -version
+          swift --version
+
+      - name: Build Dockman app
+        run: |
+          chmod +x ./scripts/make-app.sh
+          ./scripts/make-app.sh
+
+      - name: Upload app
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dockman-app
+          path: build/Dockman.app
